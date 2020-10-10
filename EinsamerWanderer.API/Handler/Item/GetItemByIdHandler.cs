@@ -18,7 +18,7 @@ namespace EinsamerWanderer.API.Handler
 
         public async Task<Item> Handle(GetItemByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _itemManager.GetItemById(request.ItemId);
+            return await _itemManager.GetItemById(request.ItemId, cancellationToken);
         }
     }
 }

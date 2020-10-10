@@ -9,6 +9,6 @@ namespace EinsamerWanderer.API.DbContext
             : base(options)
         { }
 
-        public DbSet<Item> Items;
+        public DbSet<Item> Items { get; set; }
     }
 }

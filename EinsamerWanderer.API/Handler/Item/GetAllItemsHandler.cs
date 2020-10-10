@@ -19,7 +19,7 @@ namespace EinsamerWanderer.API.Handler
 
         public Task<List<Item>> Handle(GetAllItemsQuery request, CancellationToken cancellationToken)
         {
-            return _itemManager.GetAll();
+            return _itemManager.GetAll(cancellationToken);
         }
     }
 }
