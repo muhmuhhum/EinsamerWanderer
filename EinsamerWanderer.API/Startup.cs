@@ -9,9 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace EinsamerWanderer.API
@@ -23,9 +20,6 @@ namespace EinsamerWanderer.API
             Configuration = configuration;
         }
 
-        public static readonly ILoggerFactory MyLoggerFactory
-            = LoggerFactory.Create(builder => { builder.AddConsole(); });
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -33,11 +27,8 @@ namespace EinsamerWanderer.API
         {
             services.AddDbContext<EinsamerWandererDbContext>(opt =>
             {
-                opt.UseLoggerFactory(MyLoggerFactory);
                 opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                opt.EnableSensitiveDataLogging(true);
             });
-                
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddMediatR(typeof(Startup));
@@ -62,6 +53,13 @@ namespace EinsamerWanderer.API
             });
 
             app.UseRouting();
+
+            if (env.IsDevelopment())
+            {
+                app.UseCors(
+                    options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+                );
+            }
 
             app.UseAuthorization();
 

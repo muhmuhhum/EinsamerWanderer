@@ -1,0 +1,32 @@
+﻿@page "/changeItem/{itemId}"
+@using EinsamerWanderer.Shared.Request
+@using EinsamerWanderer.Shared.RestContract.V1
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+<h3>ChangeItem</h3>
+
+<EditForm Model="@_updateItemRequest" OnValidSubmit="@HandleValidSubmit">
+    <input id="Name" @bind="_updateItemRequest.Name" />
+    <input id="Value" @bind="_updateItemRequest.Value" />
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string ItemId { get; set; }
+    private UpdateItemRequest _updateItemRequest = new UpdateItemRequest();
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetFromJsonAsync<ItemResponse>(
+          "http://localhost:5000" + Routes.Item.Get.Replace("{itemId}", ItemId));
+        _updateItemRequest.Value = response.Value;
+        _updateItemRequest.Name = response.Name;
+    }
+
+    private async void HandleValidSubmit()
+    {
+        await Http.PutAsJsonAsync("http://localhost:5000" + Routes.Item.Update.Replace("{itemId}", ItemId), _updateItemRequest);
+        NavigationManager.NavigateTo("/items");
+    }
+
+}

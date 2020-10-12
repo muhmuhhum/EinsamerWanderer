@@ -1,6 +1,5 @@
 ﻿using EinsamerWanderer.API.Model;
 using EinsamerWanderer.API.Queries;
-using EinsamerWanderer.API.RestContract.V1;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +10,7 @@ using System.Threading.Tasks;
 using EinsamerWanderer.API.Commands;
 using EinsamerWanderer.API.Request;
 using EinsamerWanderer.API.Response;
+using EinsamerWanderer.Shared.RestContract.V1;
 
 namespace EinsamerWanderer.API.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace EinsamerWanderer.API.RestContract.V1
+﻿namespace EinsamerWanderer.Shared.RestContract.V1
 {
     public partial class Routes
     {
