@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  einsamerwanderer.auth:
+    image: ${DOCKER_REGISTRY-}einsamerwandererauth
+    build:
+      context: .
+      dockerfile: EinsamerWanderer.Auth/Dockerfile
