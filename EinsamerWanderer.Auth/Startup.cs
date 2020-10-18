@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-
 namespace EinsamerWanderer.Auth
 {
     public class Startup
@@ -30,10 +29,17 @@ namespace EinsamerWanderer.Auth
                 options.UseNpgsql(Configuration.GetConnectionString("PostgresDb"));
             });
 
-            services.AddIdentity<EWUser, IdentityRole<Guid>>()
+            services.AddIdentity<EWUser, IdentityRole<Guid>>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 1;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
                 .AddEntityFrameworkStores<EWContext>()
                 .AddDefaultTokenProviders();
-
+            services.AddSingleton<IJwtTokenHandler, JwtTokenHandler>();
             services.AddSwaggerGen();
         }
 
@@ -50,8 +56,7 @@ namespace EinsamerWanderer.Auth
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "EinsamerWanderer Auth");
             });
-
-
+            
             app.UseRouting();
 
             app.UseAuthorization();

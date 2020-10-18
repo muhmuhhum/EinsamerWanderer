@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EinsamerWanderer.Auth.Model;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EinsamerWanderer.Auth.Controllers
@@ -13,13 +11,14 @@ namespace EinsamerWanderer.Auth.Controllers
     public class LoginController : Controller
     {
         private UserManager<EWUser> _userManager;
-        public SignInManager<EWUser> _signInManager;
-        public LoginController(UserManager<EWUser> userManager, SignInManager<EWUser> signInManager)
+        private SignInManager<EWUser> _signInManager;
+        private IJwtTokenHandler _jwtTokenHandler;
+        public LoginController(UserManager<EWUser> userManager, SignInManager<EWUser> signInManager, IJwtTokenHandler jwtTokenHandler)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _jwtTokenHandler = jwtTokenHandler;
         }
-
 
         [HttpPost]
         public async Task RegisterAsync(string username, string email, string password)
@@ -38,10 +37,14 @@ namespace EinsamerWanderer.Auth.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
             if (result.Succeeded)
             {
-                return Ok(user);
+                return Ok(new UserResponse
+                {
+                    UserId = user.Id,
+                    Username = user.UserName,
+                    JwtToken = _jwtTokenHandler.GenerateToken(user.Id)
+                });
             }
-            return BadRequest(result);
-            
+            return BadRequest("Wrong Password");
         }
     }
 }

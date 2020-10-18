@@ -10,10 +10,10 @@ namespace EinsamerWanderer.Auth.Context
     {
 
         public DbSet<EWUser> Users { get; set; }
-
         public DbSet<IdentityUserLogin<Guid>> UserLogins { get; set; }
-
         public DbSet<IdentityUserToken<Guid>> UserTokens { get; set; }
+        public DbSet<IdentityUserClaim<Guid>> UserClaims { get; set; }
+        
         public EWContext(DbContextOptions<EWContext> options) : base(options)
         {
 
@@ -49,6 +49,12 @@ namespace EinsamerWanderer.Auth.Context
                     b.Property(t => t.Name).HasMaxLength(maxKeyLength);
                 }
                 b.ToTable("AspNetUserTokens");
+            });
+            
+            modelBuilder.Entity<IdentityUserClaim<Guid>>(b =>
+            {
+                b.HasKey(uc => uc.Id);
+                b.ToTable("AspNetUserClaims");
             });
         }
     }

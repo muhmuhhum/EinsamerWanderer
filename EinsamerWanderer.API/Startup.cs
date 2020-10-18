@@ -3,6 +3,7 @@ using EinsamerWanderer.API.DbContext;
 using EinsamerWanderer.API.Manager;
 using EinsamerWanderer.API.Store;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Logging;
 using Serilog;
 
 namespace EinsamerWanderer.API
@@ -31,6 +33,21 @@ namespace EinsamerWanderer.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer("Bearer", config =>
+                {
+                    config.Authority = "http://localhost:5020";
+                    config.TokenValidationParameters.ValidateAudience = false;
+                    config.Audience = "einsamerwandererApi";
+                    
+                    config.RequireHttpsMetadata = false;
+                });
+            
             services.AddDbContext<EinsamerWandererDbContext>(opt =>
             {
                 opt.UseLoggerFactory(MyLoggerFactory);
@@ -44,6 +61,8 @@ namespace EinsamerWanderer.API
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IItemManager, ItemManager>();
             services.AddScoped<IItemStore, ItemStore>();
+            
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +82,8 @@ namespace EinsamerWanderer.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

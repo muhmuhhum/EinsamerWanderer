@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using EinsamerWanderer.API.Commands;
 using EinsamerWanderer.API.Request;
 using EinsamerWanderer.API.Response;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EinsamerWanderer.API.Controllers
 {
@@ -49,9 +50,11 @@ namespace EinsamerWanderer.API.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Item>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpGet(Routes.Item.GetAll)]
         public async Task<IActionResult> GetAll()
         {
+            
             try
             {
                 var result = await _mediator.Send(new GetAllItemsQuery());
