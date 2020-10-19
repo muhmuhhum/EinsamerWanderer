@@ -1,3 +1,4 @@
+using System.Text;
 using AutoMapper;
 using EinsamerWanderer.API.DbContext;
 using EinsamerWanderer.API.Manager;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace EinsamerWanderer.API
@@ -39,15 +41,15 @@ namespace EinsamerWanderer.API
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer("Bearer", config =>
+                .AddScheme<JwtBearerOptions,JwtTokenHandler>(JwtBearerDefaults.AuthenticationScheme,options =>
                 {
-                    config.Authority = "http://localhost:5020";
-                    config.TokenValidationParameters.ValidateAudience = false;
-                    config.Audience = "einsamerwandererApi";
-                    
-                    config.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                    };
                 });
-            
+
             services.AddDbContext<EinsamerWandererDbContext>(opt =>
             {
                 opt.UseLoggerFactory(MyLoggerFactory);

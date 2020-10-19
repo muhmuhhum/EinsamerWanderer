@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace EinsamerWanderer.Auth.Controllers
 {
     [ApiController]
     [Route("/token")]
-    public class TokenController
+    public class TokenController : ControllerBase
     {
         private IJwtTokenHandler _jwtTokenHandler;
+        private IConfiguration _configuration;
 
-        public TokenController(IJwtTokenHandler jwtTokenHandler)
+        public TokenController(IJwtTokenHandler jwtTokenHandler, IConfiguration configuration)
         {
             _jwtTokenHandler = jwtTokenHandler;
+            _configuration = configuration;
         }
         
         [HttpGet]
@@ -18,9 +21,9 @@ namespace EinsamerWanderer.Auth.Controllers
         {
             if (_jwtTokenHandler.IsValidToken(token))
             {
-                return new NoContentResult();
+                return Ok(_configuration["JwtToken:Key"]);
             }
-            return new BadRequestResult();
+            return BadRequest();
         }
     }
 }

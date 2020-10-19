@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace EinsamerWanderer.API.Controllers
 {
+    [Authorize]
+    [ApiController]
     public class ItemController : Controller
     {
         private ILogger<ItemController> _logger;
@@ -50,7 +52,6 @@ namespace EinsamerWanderer.API.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Item>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize]
         [HttpGet(Routes.Item.GetAll)]
         public async Task<IActionResult> GetAll()
         {
