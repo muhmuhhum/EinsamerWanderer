@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using EinsamerWanderer.API.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EinsamerWanderer.API.Controllers
@@ -15,6 +16,12 @@ namespace EinsamerWanderer.API.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
+        {
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateCharacterRequest request)
         {
             return Ok();
         }
