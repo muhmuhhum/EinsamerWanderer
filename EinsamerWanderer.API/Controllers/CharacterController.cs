@@ -25,5 +25,11 @@ namespace EinsamerWanderer.API.Controllers
         {
             return Ok();
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid characterId)
+        {
+            return Ok();
+        }
     }
 }
