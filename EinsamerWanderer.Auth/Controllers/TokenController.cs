@@ -21,7 +21,7 @@ namespace EinsamerWanderer.Auth.Controllers
         {
             if (_jwtTokenHandler.IsValidToken(token))
             {
-                return Ok(_configuration["JwtToken:Key"]);
+                return NoContent();
             }
             return BadRequest();
         }

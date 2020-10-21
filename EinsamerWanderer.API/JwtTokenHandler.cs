@@ -34,13 +34,10 @@ namespace EinsamerWanderer.API
                 return AuthenticateResult.Fail("No bearer token in url");
             }
             var result = await new HttpClient().GetAsync($"http://localhost:5020/token/?token={token}");
-            if (result.StatusCode != HttpStatusCode.OK)
+            if (result.StatusCode != HttpStatusCode.NoContent)
             {
                 return AuthenticateResult.Fail("Token not valid");
             }
-
-            var secret = await result.Content.ReadAsStringAsync();
-            Options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             return await base.HandleAuthenticateAsync();
         }
     }

@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using AutoMapper;
 using EinsamerWanderer.API.DbContext;
@@ -47,6 +48,7 @@ namespace EinsamerWanderer.API
                     {
                         ValidateAudience = false,
                         ValidateIssuer = false,
+                        SignatureValidator = (token, parameters) => new JwtSecurityTokenHandler().ReadJwtToken(token),
                     };
                 });
 
