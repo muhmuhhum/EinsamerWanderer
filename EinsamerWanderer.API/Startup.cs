@@ -46,9 +46,9 @@ namespace EinsamerWanderer.API
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        SignatureValidator =  new SignatureValidator((token, parameters) => new JwtSecurityTokenHandler().ReadToken(token)),
                         ValidateAudience = false,
                         ValidateIssuer = false,
-                        SignatureValidator = (token, parameters) => new JwtSecurityTokenHandler().ReadJwtToken(token),
                     };
                 });
 
