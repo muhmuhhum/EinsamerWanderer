@@ -1,14 +1,11 @@
 ﻿using System;
-using EinsamerWanderer.API.Model.Enums;
 
-namespace EinsamerWanderer.API.Model
+namespace EinsamerWanderer.Shared.Request
 {
-    public class Item
+    public class ItemResponse
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public double Value { get; set; }
-
-        public Rarity Rarity { get; set; }
     }
 }

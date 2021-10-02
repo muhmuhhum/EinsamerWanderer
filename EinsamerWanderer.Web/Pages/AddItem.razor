@@ -1,0 +1,23 @@
+﻿@page "/addItem"
+@using EinsamerWanderer.Shared.Request
+@using EinsamerWanderer.Shared.RestContract.V1
+@inject HttpClient Http
+
+
+<h3>AddItem</h3>
+
+<EditForm Model="@_createItemRequest" OnValidSubmit="@HandleValidSubmit">
+    <input id="Name" @bind="_createItemRequest.Name" />
+    <input id="Value" @bind="_createItemRequest.Value" />
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private CreateItemRequest _createItemRequest = new CreateItemRequest();
+
+    private void HandleValidSubmit()
+    {
+        Http.PostAsJsonAsync("http://localhost:5000" + Routes.Item.Create, _createItemRequest);
+    }
+
+}

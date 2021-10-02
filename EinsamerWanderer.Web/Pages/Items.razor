@@ -1,0 +1,60 @@
+﻿@using EinsamerWanderer.Shared.Request
+@using EinsamerWanderer.Shared.RestContract.V1
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@page "/Items"
+<h3>Items</h3>
+
+<div class="justify-content-center ">
+    <button @onclick="NavigateToAdd" class="btn btn-info">Add</button>
+        <table class="table table-responsive w-50">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in _itemResponses)
+            {
+                var varItem = item;
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Value</td>
+                    <td>
+                        <button @onclick="@(() => NavigateToChange(varItem.Id))" class="btn btn-light btn-lg">Change</button>
+                    </td>
+                    <td>
+                        <button @onclick="@(() => RemoveItem(varItem.Id))" class="btn btn-light">X</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+</div>
+@code {
+    private List<ItemResponse> _itemResponses = new List<ItemResponse>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _itemResponses = await Http.GetFromJsonAsync<List<ItemResponse>>("http://localhost:5000" + Routes.Item.GetAll);
+    }
+
+    private void NavigateToAdd()
+    {
+        NavigationManager.NavigateTo("/AddItem");
+    }
+
+    private void NavigateToChange(Guid itemId)
+    {
+        NavigationManager.NavigateTo($"/ChangeItem/{itemId.ToString()}");
+    }
+
+    private async Task RemoveItem(Guid itemId)
+    {
+        await Http.DeleteAsync("http://localhost:5000" + Routes.Item.Delete.Replace("{itemId}", itemId.ToString()));
+        _itemResponses.Remove(_itemResponses.FirstOrDefault(x => x.Id == itemId));
+    }
+
+}

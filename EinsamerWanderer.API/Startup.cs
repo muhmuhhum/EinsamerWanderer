@@ -17,7 +17,6 @@ using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
 
 namespace EinsamerWanderer.API
 {
@@ -27,9 +26,6 @@ namespace EinsamerWanderer.API
         {
             Configuration = configuration;
         }
-
-        public static readonly ILoggerFactory MyLoggerFactory
-            = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
         public IConfiguration Configuration { get; }
 
@@ -54,11 +50,8 @@ namespace EinsamerWanderer.API
 
             services.AddDbContext<EinsamerWandererDbContext>(opt =>
             {
-                opt.UseLoggerFactory(MyLoggerFactory);
                 opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                opt.EnableSensitiveDataLogging(true);
             });
-                
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddMediatR(typeof(Startup));
@@ -86,6 +79,12 @@ namespace EinsamerWanderer.API
 
             app.UseRouting();
 
+            if (env.IsDevelopment())
+            {
+                app.UseCors(
+                    options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+                );
+            }
             app.UseAuthentication();
             
             app.UseAuthorization();
