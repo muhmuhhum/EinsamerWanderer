@@ -11,9 +11,12 @@ using EinsamerWanderer.API.Commands;
 using EinsamerWanderer.API.Request;
 using EinsamerWanderer.API.Response;
 using EinsamerWanderer.Shared.RestContract.V1;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EinsamerWanderer.API.Controllers
 {
+    [Authorize]
+    [ApiController]
     public class ItemController : Controller
     {
         private ILogger<ItemController> _logger;
@@ -52,6 +55,7 @@ namespace EinsamerWanderer.API.Controllers
         [HttpGet(Routes.Item.GetAll)]
         public async Task<IActionResult> GetAll()
         {
+            
             try
             {
                 var result = await _mediator.Send(new GetAllItemsQuery());
