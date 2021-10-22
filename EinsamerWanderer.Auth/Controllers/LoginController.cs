@@ -45,5 +45,11 @@ namespace EinsamerWanderer.Auth.Controllers
             }
             return BadRequest("Wrong Password");
         }
+
+        [HttpGet]
+        public IActionResult Stuff()
+        {
+            return Ok("Stuff");
+        }
     }
 }
