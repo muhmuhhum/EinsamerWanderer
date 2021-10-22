@@ -15,6 +15,12 @@ namespace EinsamerWanderer.Auth.Controllers
             _jwtTokenHandler = jwtTokenHandler;
             _configuration = configuration;
         }
+
+        [HttpGet]
+        public IActionResult Test()
+        {
+            return Ok("Blub");
+        }
         
         [HttpGet]
         public IActionResult VerifyToken(string token)
